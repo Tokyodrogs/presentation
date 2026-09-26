@@ -154,6 +154,10 @@ a:hover{ text-decoration:underline; }
 .slide.exit-right{ opacity:0; transform:translateX(52px) scale(.985); }
 .slide.from-left:not(.active){ transform:translateX(-52px) scale(.985); }
 .slide::-webkit-scrollbar{ width:8px; }
+@supports (justify-content: safe center){
+  .slide{ justify-content:safe center; }
+  .slide--title, .slide--closing{ justify-content:safe center; }
+}
 .slide::-webkit-scrollbar-thumb{ background:rgba(148,163,184,.28); border-radius:99px; }
 
 /* Slide heading block */
@@ -376,7 +380,7 @@ tbody th{ text-align:left; font-weight:600; color:var(--text); }
   content:""; position:absolute; top:26px; left:6%; right:6%; height:2px;
   background:linear-gradient(90deg, transparent, var(--cyan-line) 12%, var(--cyan-line) 88%, transparent);
 }
-.phase{ position:relative; padding-top:64px; }
+.phase{ position:relative; padding-top:64px; overflow:visible; }
 .phase-num{
   position:absolute; top:0; left:0;
   width:52px; height:52px; border-radius:16px; display:grid; place-items:center;
@@ -396,11 +400,12 @@ tbody th{ text-align:left; font-weight:600; color:var(--text); }
 .budget .pct{ color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
 .bar-cell{ width:34%; min-width:110px; }
 .bar{
-  display:block; height:9px; width:var(--w,0%);
+  display:block; height:9px; width:0;
   border-radius:99px; background:linear-gradient(90deg,var(--cyan-600),var(--cyan));
   box-shadow:0 0 12px rgba(34,211,238,.35);
   transition:width .8s var(--ease) .15s;
 }
+.slide.active .bar{ width:var(--w,0%); }
 .budget tr.total td, .budget tr.total th{
   background:rgba(34,211,238,.10); border-top:1px solid var(--cyan-line);
   font-weight:800; font-size:1.02rem; color:var(--text);
