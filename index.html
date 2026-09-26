@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="EnrollEase — A Smarter, Faster, and Paperless Enrollment System for Philippine Schools. Team Innovate, Philippine Startup Challenge XI." />
+<meta name="theme-color" content="#0f172a" />
+<title>EnrollEase — Philippine Startup Challenge XI | Team Innovate</title>
+<style>
+/* ============================================================
+   EnrollEase Pitch Deck — single-file presentation
+   Dark navy/slate theme · cyan accent · glassmorphism cards
+   ============================================================ */
+
+/* ---------- Design tokens ---------- */
+:root{
+  --bg:            #0f172a;
+  --bg-deep:       #0a1020;
+  --cyan:          #22d3ee;
+  --cyan-600:      #06b6d4;
+  --cyan-soft:     rgba(34,211,238,.12);
+  --cyan-line:     rgba(34,211,238,.35);
+  --text:          #f8fafc;
+  --muted:         #94a3b8;
+  --muted-2:       #cbd5e1;
+  --glass:         rgba(255,255,255,.045);
+  --glass-strong:  rgba(255,255,255,.075);
+  --glass-hover:   rgba(255,255,255,.085);
+  --border:        rgba(255,255,255,.10);
+  --border-strong: rgba(255,255,255,.18);
+  --rose:          #fb7185;
+  --radius:        20px;
+  --radius-sm:     14px;
+  --shadow:        0 18px 50px rgba(2,6,23,.55);
+  --ease:          cubic-bezier(.22,1,.36,1);
+  --font: "Segoe UI", Inter, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- Reset / base ---------- */
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow:hidden;
+  line-height:1.55;
+}
+h1,h2,h3,h4,p,ul,ol,figure{ margin:0; }
+ul{ padding:0; list-style:none; }
+a{ color:var(--cyan); text-decoration:none; }
+a:hover{ text-decoration:underline; }
+
+/* ---------- Ambient background ---------- */
+.bg-layer{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(1100px 700px at 12% -10%, rgba(34,211,238,.16), transparent 60%),
+    radial-gradient(900px 600px at 92% 8%,  rgba(56,189,248,.12), transparent 60%),
+    radial-gradient(900px 700px at 70% 110%, rgba(99,102,241,.14), transparent 60%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 45%, #0c1425 100%);
+}
+.bg-grid{
+  position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:
+    linear-gradient(rgba(148,163,184,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,.055) 1px, transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at 50% 40%, #000 30%, transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 40%, #000 30%, transparent 78%);
+}
+.orb{
+  position:fixed; z-index:0; border-radius:50%; pointer-events:none;
+  filter:blur(70px); opacity:.5;
+  animation:float 18s ease-in-out infinite alternate;
+}
+.orb.a{ width:420px; height:420px; top:-120px; left:-100px;  background:radial-gradient(circle, rgba(34,211,238,.42), transparent 65%); }
+.orb.b{ width:520px; height:520px; bottom:-180px; right:-140px; background:radial-gradient(circle, rgba(99,102,241,.38), transparent 65%); animation-delay:-6s; }
+.orb.c{ width:300px; height:300px; top:38%; left:58%; background:radial-gradient(circle, rgba(56,189,248,.26), transparent 65%); animation-delay:-11s; }
+@keyframes float{
+  from{ transform:translate3d(0,0,0) scale(1); }
+  to  { transform:translate3d(40px,-30px,0) scale(1.12); }
+}
+
+/* ---------- Deck shell ---------- */
+.deck{
+  position:relative; z-index:1;
+  height:100vh; height:100dvh;
+  display:flex; flex-direction:column;
+}
+
+/* Top bar */
+.topbar{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:16px clamp(16px,4vw,48px) 10px;
+}
+.brand{ display:flex; align-items:center; gap:11px; min-width:0; }
+.brand-mark{
+  width:36px; height:36px; flex:0 0 auto; border-radius:11px;
+  display:grid; place-items:center; color:#04222b;
+  background:linear-gradient(140deg, var(--cyan), #6366f1);
+  box-shadow:0 6px 18px rgba(34,211,238,.32);
+}
+.brand-mark svg{ width:20px; height:20px; }
+.brand-text{ display:flex; flex-direction:column; line-height:1.15; min-width:0; }
+.brand-name{ font-weight:700; letter-spacing:.2px; font-size:1rem; }
+.brand-sub{ font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.counter{
+  display:flex; align-items:baseline; gap:7px;
+  padding:8px 14px; border-radius:999px;
+  background:var(--glass); border:1px solid var(--border);
+  font-variant-numeric:tabular-nums; backdrop-filter:blur(8px);
+}
+.counter .cur{ font-size:1.15rem; font-weight:700; color:var(--cyan); }
+.counter .sep{ color:var(--muted); }
+.counter .tot{ font-size:.9rem; color:var(--muted); }
+
+/* Progress bar */
+.progress-track{
+  position:relative; flex:0 0 auto; height:3px; margin:0 clamp(16px,4vw,48px);
+  background:rgba(255,255,255,.07); border-radius:99px; overflow:hidden;
+}
+.progress-fill{
+  position:absolute; inset:0 auto 0 0; width:8.33%;
+  background:linear-gradient(90deg, var(--cyan-600), var(--cyan));
+  border-radius:99px; box-shadow:0 0 14px rgba(34,211,238,.6);
+  transition:width .55s var(--ease);
+}
+
+/* ---------- Slides ---------- */
+.stage{
+  position:relative; flex:1 1 auto; min-height:0;
+}
+.slide{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; justify-content:center;
+  gap:clamp(14px,2.2vh,26px);
+  padding:clamp(14px,3.2vh,34px) clamp(18px,4.5vw,64px);
+  overflow-y:auto; overscroll-behavior:contain;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transform:translateX(52px) scale(.985);
+  transition:opacity .55s ease, transform .6s var(--ease), visibility .55s linear;
+}
+.slide.active{
+  opacity:1; visibility:visible; pointer-events:auto; transform:none;
+}
+.slide.exit-left, .slide.exit-right{ visibility:visible; }
+.slide.exit-left{ opacity:0; transform:translateX(-52px) scale(.985); }
+.slide.exit-right{ opacity:0; transform:translateX(52px) scale(.985); }
+.slide.from-left:not(.active){ transform:translateX(-52px) scale(.985); }
+.slide::-webkit-scrollbar{ width:8px; }
+.slide::-webkit-scrollbar-thumb{ background:rgba(148,163,184,.28); border-radius:99px; }
+
+/* Slide heading block */
+.slide-head{ max-width:1100px; }
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:.72rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:10px;
+}
+.eyebrow::before{ content:""; width:26px; height:2px; background:var(--cyan); border-radius:2px; }
+.slide-title{
+  font-size:clamp(1.6rem,3.6vw,2.6rem); font-weight:800; letter-spacing:-.02em; line-height:1.15;
+}
+.slide-sub{
+  margin-top:8px; color:var(--muted); font-size:clamp(.92rem,1.35vw,1.05rem); max-width:80ch;
+}
+.accent{ color:var(--cyan); }
+
+/* ---------- Glass cards ---------- */
+.card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:clamp(16px,2vw,24px);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:var(--shadow);
+  position:relative; overflow:hidden;
+  transition:transform .35s var(--ease), background .35s ease, border-color .35s ease;
+}
+.card::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--cyan-line), transparent);
+  opacity:.7;
+}
+.card:hover{ transform:translateY(-5px); background:var(--glass-hover); border-color:var(--border-strong); }
+
+.icon-chip{
+  width:46px; height:46px; border-radius:13px; display:grid; place-items:center;
+  background:var(--cyan-soft); border:1px solid var(--cyan-line); color:var(--cyan);
+  margin-bottom:14px;
+}
+.icon-chip svg{ width:23px; height:23px; }
+.icon-chip.sm{ width:38px; height:38px; border-radius:11px; margin-bottom:0; }
+.icon-chip.sm svg{ width:19px; height:19px; }
+
+.card h3{ font-size:1.08rem; font-weight:700; margin-bottom:7px; letter-spacing:-.01em; }
+.card p{ color:var(--muted); font-size:.94rem; }
+.card .tag{
+  display:inline-block; margin-top:14px; padding:5px 11px; border-radius:999px;
+  font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--cyan); background:var(--cyan-soft); border:1px solid var(--cyan-line);
+}
+
+/* ---------- Grids ---------- */
+.grid{ display:grid; gap:clamp(12px,1.6vw,20px); width:100%; }
+.cols-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+.cols-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+.cols-4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+.grow{ flex:1 1 auto; min-height:0; }
+
+/* ---------- Slide 1: title ---------- */
+.slide--title{ align-items:center; text-align:center; }
+.badge{
+  display:inline-flex; align-items:center; gap:9px;
+  padding:8px 16px; border-radius:999px; margin-bottom:clamp(16px,3vh,28px);
+  background:var(--cyan-soft); border:1px solid var(--cyan-line); color:var(--cyan);
+  font-size:.76rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  backdrop-filter:blur(8px);
+}
+.badge svg{ width:16px; height:16px; }
+.hero-title{
+  font-size:clamp(3rem,10vw,6.2rem); font-weight:900; letter-spacing:-.045em; line-height:.98;
+  background:linear-gradient(100deg,#ffffff 10%, var(--cyan) 55%, #6366f1 105%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:clamp(14px,2.4vh,22px);
+}
+.hero-tagline{
+  font-size:clamp(1.02rem,2.2vw,1.5rem); color:var(--muted-2); font-weight:500;
+  width:min(660px,92vw); margin:0 auto;
+}
+.hero-rule{
+  width:min(560px,88vw); height:1px; margin:clamp(18px,3.2vh,30px) auto;
+  background:linear-gradient(90deg, transparent, var(--cyan-line), transparent);
+}
+.hero-team{ font-size:1.05rem; }
+.hero-team .label{ color:var(--muted); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; display:block; margin-bottom:4px; }
+.hero-team .name{ font-weight:800; font-size:1.35rem; letter-spacing:-.01em; }
+.hero-chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:clamp(18px,3vh,28px); }
+.chip{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:7px 14px; border-radius:999px; font-size:.8rem; color:var(--muted-2);
+  background:var(--glass); border:1px solid var(--border); backdrop-filter:blur(8px);
+}
+.chip svg{ width:15px; height:15px; color:var(--cyan); }
+.start-hint{
+  position:absolute; bottom:clamp(10px,2.5vh,22px); left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:8px; color:var(--muted);
+  font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap;
+}
+.start-hint kbd{
+  font-family:var(--font); font-size:.72rem; padding:2px 8px; border-radius:6px;
+  background:var(--glass); border:1px solid var(--border); color:var(--cyan);
+}
+
+/* ---------- Stat cards ---------- */
+.stat{ text-align:left; }
+.stat .num{
+  font-size:clamp(2rem,4.4vw,3.1rem); font-weight:900; letter-spacing:-.035em; line-height:1;
+  background:linear-gradient(120deg,#ffffff, var(--cyan) 85%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:10px; font-variant-numeric:tabular-nums;
+}
+.stat .lbl{ font-weight:700; font-size:.98rem; margin-bottom:6px; }
+.stat p{ color:var(--muted); font-size:.88rem; }
+.stat.sm .num{ font-size:clamp(1.6rem,3.2vw,2.3rem); }
+
+/* ---------- Feature list (slide 4) ---------- */
+.split{ display:grid; grid-template-columns:1.35fr .95fr; gap:clamp(14px,2vw,24px); align-items:stretch; }
+.feature{
+  display:flex; gap:14px; align-items:flex-start;
+  padding:15px 18px; border-radius:var(--radius-sm);
+  background:var(--glass); border:1px solid var(--border);
+  backdrop-filter:blur(10px);
+  transition:transform .3s var(--ease), border-color .3s ease, background .3s ease;
+}
+.feature:hover{ transform:translateX(5px); border-color:var(--cyan-line); background:var(--glass-hover); }
+.feature .icon-chip{ margin-bottom:0; flex:0 0 auto; }
+.feature h3{ font-size:1rem; margin-bottom:3px; }
+.feature p{ color:var(--muted); font-size:.87rem; }
+.callout{
+  display:flex; flex-direction:column; justify-content:center; gap:14px;
+  padding:clamp(18px,2.2vw,26px);
+  background:linear-gradient(150deg, rgba(34,211,238,.16), rgba(99,102,241,.10) 70%), var(--glass);
+  border:1px solid var(--cyan-line); border-radius:var(--radius);
+  backdrop-filter:blur(12px); box-shadow:var(--shadow);
+}
+.callout-top{ display:flex; align-items:center; gap:14px; }
+.sdg-badge{
+  width:56px; height:56px; flex:0 0 auto; border-radius:16px; display:grid; place-items:center;
+  font-size:1.5rem; font-weight:900; color:#04222b;
+  background:linear-gradient(140deg,var(--cyan),#818cf8); box-shadow:0 8px 22px rgba(34,211,238,.3);
+}
+.callout h3{ font-size:1.15rem; }
+.callout .kicker{ font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan); font-weight:700; }
+.callout p{ color:var(--muted-2); font-size:.93rem; }
+
+/* ---------- Target market columns ---------- */
+.market-col h3{ display:flex; align-items:center; gap:10px; font-size:1.12rem; }
+.market-col .who{ color:var(--cyan); font-size:.78rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; margin-bottom:14px; }
+.bullets{ display:flex; flex-direction:column; gap:11px; }
+.bullets li{ display:flex; gap:11px; align-items:flex-start; color:var(--muted-2); font-size:.93rem; }
+.bullets svg{ width:17px; height:17px; flex:0 0 auto; margin-top:3px; color:var(--cyan); }
+.market-col .foot{
+  margin-top:16px; padding-top:14px; border-top:1px dashed var(--border);
+  font-size:.85rem; color:var(--muted);
+}
+
+/* ---------- Tables ---------- */
+.table-wrap{
+  background:var(--glass); border:1px solid var(--border); border-radius:var(--radius);
+  backdrop-filter:blur(12px); box-shadow:var(--shadow);
+  overflow-x:auto; overflow-y:hidden;
+}
+table{ width:100%; border-collapse:collapse; font-size:clamp(.84rem,1.15vw,.98rem); }
+.compare{ min-width:520px; }
+thead th{
+  text-align:left; padding:15px clamp(12px,1.6vw,20px);
+  font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  background:rgba(255,255,255,.04); border-bottom:1px solid var(--border);
+}
+tbody td, tbody th{
+  padding:14px clamp(12px,1.6vw,20px); border-bottom:1px solid rgba(255,255,255,.06);
+  vertical-align:middle;
+}
+tbody tr:last-child td, tbody tr:last-child th{ border-bottom:none; }
+tbody tr{ transition:background .25s ease; }
+tbody tr:hover{ background:rgba(34,211,238,.05); }
+tbody th{ text-align:left; font-weight:600; color:var(--text); }
+
+.compare th.col-trad{ color:var(--rose); }
+.compare th.col-ee{ color:var(--cyan); }
+.compare td{ color:var(--muted-2); }
+.compare td.ee{ color:var(--text); font-weight:600; background:rgba(34,211,238,.06); }
+.mark{ display:inline-grid; place-items:center; width:20px; height:20px; border-radius:50%; margin-right:9px; font-size:.7rem; font-weight:800; vertical-align:-4px; }
+.mark.no{ background:rgba(251,113,133,.16); color:var(--rose); border:1px solid rgba(251,113,133,.4); }
+.mark.yes{ background:var(--cyan-soft); color:var(--cyan); border:1px solid var(--cyan-line); }
+.compare tbody tr:hover td.ee{ background:rgba(34,211,238,.1); }
+
+/* ---------- Flow diagram (slide 8) ---------- */
+.flow{
+  display:flex; align-items:stretch; gap:clamp(8px,1.2vw,16px);
+}
+.flow-box{
+  flex:1 1 0; display:flex; flex-direction:column; gap:6px; justify-content:center;
+  padding:clamp(14px,1.8vw,22px); border-radius:var(--radius);
+  background:var(--glass); border:1px solid var(--border);
+  backdrop-filter:blur(12px); box-shadow:var(--shadow);
+  transition:transform .3s var(--ease), border-color .3s ease;
+}
+.flow-box:hover{ transform:translateY(-4px); border-color:var(--cyan-line); }
+.flow-box .fb-icon{ color:var(--cyan); margin-bottom:6px; }
+.flow-box .fb-icon svg{ width:24px; height:24px; }
+.flow-box h3{ font-size:1.02rem; }
+.flow-box p{ color:var(--muted); font-size:.86rem; }
+.flow-box.core{
+  background:linear-gradient(150deg, rgba(34,211,238,.18), rgba(99,102,241,.12)), var(--glass);
+  border-color:var(--cyan-line);
+}
+.flow-arrow{
+  flex:0 0 auto; display:grid; place-items:center; color:var(--cyan);
+  animation:pulseX 2.4s ease-in-out infinite;
+}
+.flow-arrow svg{ width:26px; height:26px; }
+@keyframes pulseX{ 0%,100%{ opacity:.45; transform:translateX(-3px);} 50%{ opacity:1; transform:translateX(3px);} }
+
+/* ---------- Roadmap (slide 10) ---------- */
+.roadmap{ position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(12px,1.6vw,20px); }
+.roadmap::before{
+  content:""; position:absolute; top:26px; left:6%; right:6%; height:2px;
+  background:linear-gradient(90deg, transparent, var(--cyan-line) 12%, var(--cyan-line) 88%, transparent);
+}
+.phase{ position:relative; padding-top:64px; }
+.phase-num{
+  position:absolute; top:0; left:0;
+  width:52px; height:52px; border-radius:16px; display:grid; place-items:center;
+  font-weight:900; font-size:1.2rem; color:var(--cyan);
+  background:var(--bg-deep); border:1px solid var(--cyan-line);
+  box-shadow:0 0 0 6px rgba(15,23,42,.9), 0 8px 22px rgba(2,6,23,.5);
+}
+.phase h3{ font-size:1.05rem; margin-bottom:4px; }
+.phase .months{
+  display:inline-block; font-size:.74rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:9px;
+}
+.phase p{ color:var(--muted); font-size:.88rem; }
+
+/* ---------- Budget table ---------- */
+.budget .amount{ font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.budget .pct{ color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.bar-cell{ width:34%; min-width:110px; }
+.bar{
+  display:block; height:9px; width:var(--w,0%);
+  border-radius:99px; background:linear-gradient(90deg,var(--cyan-600),var(--cyan));
+  box-shadow:0 0 12px rgba(34,211,238,.35);
+  transition:width .8s var(--ease) .15s;
+}
+.budget tr.total td, .budget tr.total th{
+  background:rgba(34,211,238,.10); border-top:1px solid var(--cyan-line);
+  font-weight:800; font-size:1.02rem; color:var(--text);
+}
+.budget-note{ margin-top:14px; color:var(--muted); font-size:.85rem; display:flex; gap:9px; align-items:flex-start; }
+.budget-note svg{ width:16px; height:16px; color:var(--cyan); flex:0 0 auto; margin-top:3px; }
+
+/* ---------- Closing slide ---------- */
+.slide--closing{ align-items:center; text-align:center; }
+.closing-title{
+  font-size:clamp(2.6rem,8vw,5rem); font-weight:900; letter-spacing:-.04em; line-height:1;
+  background:linear-gradient(100deg,#ffffff 15%, var(--cyan) 60%, #6366f1 105%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.closing-quote{
+  font-size:clamp(1.02rem,2.1vw,1.4rem); font-style:italic; color:var(--muted-2);
+  width:min(620px,92vw); margin:clamp(14px,2.6vh,24px) auto 0;
+}
+.cta{
+  display:inline-flex; align-items:center; gap:11px; margin-top:clamp(18px,3vh,28px);
+  padding:14px 26px; border-radius:999px; font-weight:700; font-size:1rem;
+  color:#04222b; background:linear-gradient(120deg,var(--cyan),#818cf8);
+  box-shadow:0 12px 34px rgba(34,211,238,.32);
+  transition:transform .3s var(--ease), box-shadow .3s ease;
+}
+.cta:hover{ transform:translateY(-3px); box-shadow:0 18px 44px rgba(34,211,238,.42); text-decoration:none; }
+.cta svg{ width:19px; height:19px; }
+.contact{
+  display:inline-flex; align-items:center; gap:10px; margin-top:clamp(16px,2.6vh,22px);
+  padding:11px 20px; border-radius:999px; font-size:.98rem; font-weight:600;
+  background:var(--glass); border:1px solid var(--border); backdrop-filter:blur(8px);
+  transition:border-color .3s ease, background .3s ease;
+}
+.contact:hover{ border-color:var(--cyan-line); background:var(--glass-hover); text-decoration:none; }
+.contact svg{ width:18px; height:18px; color:var(--cyan); }
+.closing-foot{
+  margin-top:clamp(20px,3.4vh,32px); padding-top:16px; border-top:1px solid var(--border);
+  width:min(520px,86vw); color:var(--muted); font-size:.82rem;
+  display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:center; align-items:center;
+}
+.closing-foot strong{ color:var(--muted-2); }
+
+/* ---------- Bottom bar ---------- */
+.bottombar{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:10px clamp(16px,4vw,48px) clamp(12px,2.2vh,20px);
+}
+.nav-btn{
+  display:inline-flex; align-items:center; gap:9px;
+  padding:11px 20px; border-radius:999px; cursor:pointer;
+  font-family:var(--font); font-size:.92rem; font-weight:700; color:var(--text);
+  background:var(--glass); border:1px solid var(--border);
+  backdrop-filter:blur(10px);
+  transition:transform .25s var(--ease), background .25s ease, border-color .25s ease, color .25s ease, opacity .25s ease;
+}
+.nav-btn svg{ width:18px; height:18px; }
+.nav-btn:hover:not(:disabled){ background:var(--cyan-soft); border-color:var(--cyan-line); color:var(--cyan); transform:translateY(-2px); }
+.nav-btn:disabled{ opacity:.35; cursor:not-allowed; }
+.nav-btn:focus-visible, .dot:focus-visible, .cta:focus-visible, .contact:focus-visible{
+  outline:2px solid var(--cyan); outline-offset:3px;
+}
+
+.dots{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; }
+.dot{
+  width:9px; height:9px; padding:0; border-radius:50%; cursor:pointer;
+  background:rgba(255,255,255,.18); border:1px solid transparent;
+  transition:all .3s var(--ease);
+}
+.dot:hover{ background:rgba(34,211,238,.55); transform:scale(1.25); }
+.dot.active{ width:26px; border-radius:99px; background:var(--cyan); box-shadow:0 0 12px rgba(34,211,238,.6); }
+.keyhint{ display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.74rem; white-space:nowrap; }
+.keyhint kbd{
+  font-family:var(--font); padding:2px 7px; border-radius:6px; font-size:.72rem;
+  background:var(--glass); border:1px solid var(--border); color:var(--muted-2);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1024px){
+  .cols-4{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .split{ grid-template-columns:1fr; }
+  .roadmap{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .roadmap::before{ display:none; }
+  .phase{ padding-top:0; padding-left:66px; min-height:52px; }
+  .bar-cell{ width:26%; min-width:80px; }
+}
+@media (max-width:760px){
+  .cols-3{ grid-template-columns:1fr; }
+  .cols-2{ grid-template-columns:1fr; }
+  .flow{ flex-direction:column; }
+  .flow-arrow{ transform:rotate(90deg); padding:2px 0; animation-name:pulseY; }
+  @keyframes pulseY{ 0%,100%{ opacity:.45; transform:rotate(90deg) translateX(-3px);} 50%{ opacity:1; transform:rotate(90deg) translateX(3px);} }
+  .keyhint{ display:none; }
+  .slide{ justify-content:flex-start; padding-top:8px; }
+  .slide--title, .slide--closing{ justify-content:center; }
+  .brand-sub{ display:none; }
+}
+@media (max-width:560px){
+  .cols-4{ grid-template-columns:1fr; }
+  .roadmap{ grid-template-columns:1fr; }
+  .nav-btn span{ display:none; }
+  .nav-btn{ padding:11px 14px; }
+  .bottombar{ justify-content:center; }
+  .dots{ order:2; width:100%; }
+  .counter .cur{ font-size:1rem; }
+}
+@media (max-height:620px){
+  .slide{ justify-content:flex-start; }
+  .start-hint{ display:none; }
+}
+
+/* ---------- Motion preferences ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Ambient background ===== -->
+<div class="bg-layer" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="orb a" aria-hidden="true"></div>
+<div class="orb b" aria-hidden="true"></div>
+<div class="orb c" aria-hidden="true"></div>
+
+<!-- ===== Inline SVG icon sprite (no external dependencies) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs></defs>
+  <symbol id="i-cap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12.2V17c0 1.1 2.7 3 6 3s6-1.9 6-3v-4.8"/><path d="M22 10v5"/>
+  </symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>
+  </symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>
+  </symbol>
+  <symbol id="i-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/>
+  </symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 6 9 17l-5-5"/>
+  </symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/>
+  </symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/>
+  </symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+  </symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+  </symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+  </symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+  </symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="9" cy="9" r="6.5"/><path d="M14.6 14.6 21 21"/><path d="M6.2 9h5.6M9 6.5v5"/>
+  </symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91 0z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+  </symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+  </symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="M22 6.5 12 13 2 6.5"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+  </symbol>
+  <symbol id="i-chev-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 18l-6-6 6-6"/>
+  </symbol>
+  <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18l6-6-6-6"/>
+  </symbol>
+  <symbol id="i-mobile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/>
+  </symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/>
+  </symbol>
+</svg>
+
+<div class="deck">
+
+  <!-- ===== Top bar ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark"><svg><use href="#i-cap"/></svg></span>
+      <span class="brand-text">
+        <span class="brand-name">EnrollEase</span>
+        <span class="brand-sub">Pitch Deck · PSC XI</span>
+      </span>
+    </div>
+    <div class="counter" aria-live="polite">
+      <span class="cur" id="counterCurrent">01</span>
+      <span class="sep">/</span>
+      <span class="tot" id="counterTotal">12</span>
+    </div>
+  </header>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- ===== Slides ===== -->
+  <main class="stage" id="stage">
+
+    <!-- 1 · TITLE -->
+    <section class="slide slide--title active" data-title="Title">
+      <span class="badge"><svg><use href="#i-trophy"/></svg> Philippine Startup Challenge XI</span>
+      <h1 class="hero-title">EnrollEase</h1>
+      <p class="hero-tagline">A Smarter, Faster, and Paperless Enrollment System for Philippine Schools</p>
+      <div class="hero-rule"></div>
+      <div class="hero-team">
+        <span class="label">Presented by</span>
+        <span class="name">Team Innovate</span>
+      </div>
+      <div class="hero-chips">
+        <span class="chip"><svg><use href="#i-globe"/></svg> Web &amp; Mobile</span>
+        <span class="chip"><svg><use href="#i-shield"/></svg> RA 10173 Compliant</span>
+        <span class="chip"><svg><use href="#i-cap"/></svg> SDG 4 Aligned</span>
+      </div>
+      <div class="start-hint">Navigate with <kbd>←</kbd> <kbd>→</kbd> or the buttons below</div>
+    </section>
+
+    <!-- 2 · EXECUTIVE SUMMARY -->
+    <section class="slide" data-title="Executive Summary">
+      <div class="slide-head">
+        <span class="eyebrow">Executive Summary</span>
+        <h2 class="slide-title">The problem, our solution, and the value we deliver</h2>
+        <p class="slide-sub">Enrollment in Philippine schools is still largely manual — EnrollEase moves the entire process online.</p>
+      </div>
+      <div class="grid cols-3 grow">
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-alert"/></svg></span>
+          <h3>Problem</h3>
+          <p>Manual enrollment causes long queues and paperwork delays for students, parents, and school registrars.</p>
+          <span class="tag">Inefficient</span>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-mobile"/></svg></span>
+          <h3>Solution</h3>
+          <p>A web and mobile platform for online registration, document submission, and real-time status tracking.</p>
+          <span class="tag">Digital-first</span>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-trend"/></svg></span>
+          <h3>Key Value</h3>
+          <p>Cuts processing time by <strong class="accent">80%</strong> — from days of queuing and manual verification to minutes online.</p>
+          <span class="tag">80% faster</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3 · BACKGROUND OF THE PROBLEM -->
+    <section class="slide" data-title="Background of the Problem">
+      <div class="slide-head">
+        <span class="eyebrow">Background of the Problem</span>
+        <h2 class="slide-title">Why enrollment needs to change</h2>
+        <p class="slide-sub">Four recurring pain points define the traditional enrollment experience.</p>
+      </div>
+      <div class="grid cols-4 grow">
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-clock"/></svg></span>
+          <h3>Long Queues</h3>
+          <p>Parents and students wait in line for hours just to submit forms and requirements.</p>
+          <span class="tag">4–8 hour waits</span>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-cog"/></svg></span>
+          <h3>Slow Processing</h3>
+          <p>Registrars manually verify and re-encode every document, delaying confirmations.</p>
+          <span class="tag">Manual document verification</span>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-file"/></svg></span>
+          <h3>Paper Waste</h3>
+          <p>Tons of forms are printed, duplicated, filed, and stored every enrollment season.</p>
+          <span class="tag">High printing &amp; storage costs</span>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-eye-off"/></svg></span>
+          <h3>No Visibility</h3>
+          <p>Applicants receive zero status updates and must return to campus to check progress.</p>
+          <span class="tag">Zero status updates</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4 · PROPOSED SOLUTION -->
+    <section class="slide" data-title="Proposed Solution">
+      <div class="slide-head">
+        <span class="eyebrow">Proposed Solution</span>
+        <h2 class="slide-title">One platform for the entire enrollment journey</h2>
+      </div>
+      <div class="split grow">
+        <ul class="grid" style="grid-template-columns:1fr; align-content:center; gap:12px;">
+          <li class="feature">
+            <span class="icon-chip sm"><svg><use href="#i-globe"/></svg></span>
+            <div><h3>Online Registration</h3><p>Students and parents enroll from any device, anytime — no more lining up on campus.</p></div>
+          </li>
+          <li class="feature">
+            <span class="icon-chip sm"><svg><use href="#i-upload"/></svg></span>
+            <div><h3>Document Uploads</h3><p>Digital submission of requirements with secure storage and instant registrar review.</p></div>
+          </li>
+          <li class="feature">
+            <span class="icon-chip sm"><svg><use href="#i-bell"/></svg></span>
+            <div><h3>Real-Time Notifications</h3><p>SMS, email, and in-app alerts for every status change — submitted, verified, enrolled.</p></div>
+          </li>
+          <li class="feature">
+            <span class="icon-chip sm"><svg><use href="#i-shield"/></svg></span>
+            <div><h3>Data Privacy Compliance</h3><p>Built to comply with the Data Privacy Act of 2012 (RA 10173) with consent-based data handling.</p></div>
+          </li>
+        </ul>
+        <aside class="callout">
+          <div class="callout-top">
+            <span class="sdg-badge">4</span>
+            <div>
+              <span class="kicker">Aligned with</span>
+              <h3>SDG 4 — Quality Education</h3>
+            </div>
+          </div>
+          <p>EnrollEase supports inclusive and equitable quality education by removing the logistical barriers — queues, paperwork, and uncertainty — that keep students out of the classroom.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 5 · OBJECTIVES -->
+    <section class="slide" data-title="Objectives">
+      <div class="slide-head">
+        <span class="eyebrow">Objectives</span>
+        <h2 class="slide-title">What success looks like</h2>
+        <p class="slide-sub">Measurable targets for our first year of operation.</p>
+      </div>
+      <div class="grid cols-4 grow">
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-trend"/></svg></span>
+          <div class="num">80%</div>
+          <div class="lbl">Faster Processing</div>
+          <p>Reduction in enrollment processing time versus the manual process.</p>
+        </article>
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-cap"/></svg></span>
+          <div class="num">15</div>
+          <div class="lbl">Partner Schools</div>
+          <p>Onboarded private schools and HEIs within our first year.</p>
+        </article>
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-layers"/></svg></span>
+          <div class="num">50,000+</div>
+          <div class="lbl">Applications Processed</div>
+          <p>Student enrollment applications handled end-to-end on the platform.</p>
+        </article>
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-star"/></svg></span>
+          <div class="num">90%+</div>
+          <div class="lbl">User Satisfaction</div>
+          <p>Target CSAT score from students, parents, and registrar staff.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6 · TARGET MARKET -->
+    <section class="slide" data-title="Target Market">
+      <div class="slide-head">
+        <span class="eyebrow">Target Market</span>
+        <h2 class="slide-title">Who we serve</h2>
+      </div>
+      <div class="grid cols-2 grow">
+        <article class="card market-col">
+          <span class="icon-chip"><svg><use href="#i-users"/></svg></span>
+          <p class="who">Primary Customers · B2B</p>
+          <h3>Schools &amp; Institutions</h3>
+          <ul class="bullets" style="margin-top:14px;">
+            <li><svg><use href="#i-check"/></svg> Private K-12 schools seeking to modernize enrollment</li>
+            <li><svg><use href="#i-check"/></svg> Higher Education Institutions (HEIs) and colleges</li>
+            <li><svg><use href="#i-check"/></svg> Registrars and admissions offices managing high volumes</li>
+            <li><svg><use href="#i-check"/></svg> School administrators needing reporting and oversight</li>
+          </ul>
+          <p class="foot">Revenue driver: subscription licenses per institution.</p>
+        </article>
+        <article class="card market-col">
+          <span class="icon-chip"><svg><use href="#i-mobile"/></svg></span>
+          <p class="who">Beneficiaries · B2C</p>
+          <h3>Students &amp; Parents</h3>
+          <ul class="bullets" style="margin-top:14px;">
+            <li><svg><use href="#i-check"/></svg> Students enrolling for the first time or transferring</li>
+            <li><svg><use href="#i-check"/></svg> Parents and guardians handling requirements and payments</li>
+            <li><svg><use href="#i-check"/></svg> Applicants who need status visibility without campus visits</li>
+            <li><svg><use href="#i-check"/></svg> Anyone saving time, transport money, and paperwork</li>
+          </ul>
+          <p class="foot">Impact driver: free core access, with optional paid features.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 7 · VALUE PROPOSITION -->
+    <section class="slide" data-title="Value Proposition">
+      <div class="slide-head">
+        <span class="eyebrow">Value Proposition</span>
+        <h2 class="slide-title">Traditional process vs. <span class="accent">EnrollEase</span></h2>
+      </div>
+      <div class="table-wrap grow">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th style="width:26%">Aspect</th>
+              <th class="col-trad">Traditional Process</th>
+              <th class="col-ee">EnrollEase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Enrollment Mode</th>
+              <td><span class="mark no">✕</span>In-person</td>
+              <td class="ee"><span class="mark yes">✓</span>100% online</td>
+            </tr>
+            <tr>
+              <th scope="row">Processing Time</th>
+              <td><span class="mark no">✕</span>3–7 days</td>
+              <td class="ee"><span class="mark yes">✓</span>Under 15 minutes</td>
+            </tr>
+            <tr>
+              <th scope="row">Document Handling</th>
+              <td><span class="mark no">✕</span>Manual</td>
+              <td class="ee"><span class="mark yes">✓</span>Automated</td>
+            </tr>
+            <tr>
+              <th scope="row">Status Tracking</th>
+              <td><span class="mark no">✕</span>No tracking</td>
+              <td class="ee"><span class="mark yes">✓</span>Real-time notifications</td>
+            </tr>
+            <tr>
+              <th scope="row">Paper Usage</th>
+              <td><span class="mark no">✕</span>Paper waste</td>
+              <td class="ee"><span class="mark yes">✓</span>Paperless</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 8 · BUSINESS MODEL -->
+    <section class="slide" data-title="Business Model">
+      <div class="slide-head">
+        <span class="eyebrow">Business Model</span>
+        <h2 class="slide-title">How value flows and how we earn</h2>
+      </div>
+      <div class="flow grow" style="align-items:center;">
+        <div class="flow-box">
+          <span class="fb-icon"><svg><use href="#i-cap"/></svg></span>
+          <h3>Schools</h3>
+          <p>Pay a subscription to digitize and manage their enrollment process.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true"><svg><use href="#i-arrow"/></svg></div>
+        <div class="flow-box core">
+          <span class="fb-icon"><svg><use href="#i-layers"/></svg></span>
+          <h3>EnrollEase Platform</h3>
+          <p>Handles registration, verification, notifications, and reporting in one system.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true"><svg><use href="#i-arrow"/></svg></div>
+        <div class="flow-box">
+          <span class="fb-icon"><svg><use href="#i-users"/></svg></span>
+          <h3>Students &amp; Parents</h3>
+          <p>Use free core features, with optional paid premium features.</p>
+        </div>
+      </div>
+      <div class="grid cols-3">
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-layers"/></svg></span>
+          <h3>SaaS Subscription</h3>
+          <p>Recurring monthly or annual license per school, tiered by student population and features.</p>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-wrench"/></svg></span>
+          <h3>Setup &amp; Onboarding Fee</h3>
+          <p>One-time fee covering deployment, data migration, and staff training.</p>
+        </article>
+        <article class="card">
+          <span class="icon-chip"><svg><use href="#i-coin"/></svg></span>
+          <h3>Convenience Fee</h3>
+          <p>Small fee on premium student features such as priority processing and digital receipts.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 9 · MARKET ANALYSIS -->
+    <section class="slide" data-title="Market Analysis">
+      <div class="slide-head">
+        <span class="eyebrow">Market Analysis</span>
+        <h2 class="slide-title">A large, underserved market</h2>
+      </div>
+      <div class="grid cols-3 grow">
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-globe"/></svg></span>
+          <div class="num">60,000+</div>
+          <div class="lbl">TAM — Total Addressable Market</div>
+          <p>Schools across the Philippines that run enrollment cycles every year.</p>
+        </article>
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-target"/></svg></span>
+          <div class="num">12,000</div>
+          <div class="lbl">SAM — Serviceable Market</div>
+          <p>Private schools and higher education institutions able to invest in digital tools.</p>
+        </article>
+        <article class="card stat">
+          <span class="icon-chip"><svg><use href="#i-rocket"/></svg></span>
+          <div class="num">150</div>
+          <div class="lbl">SOM — Target in 3 Years</div>
+          <p>Schools we aim to onboard and serve within our first three years.</p>
+        </article>
+      </div>
+      <div class="callout" style="flex-direction:row; align-items:center; gap:18px;">
+        <span class="sdg-badge" style="width:48px;height:48px;border-radius:14px;font-size:1.2rem;"><svg style="width:22px;height:22px" ><use href="#i-clock"/></svg></span>
+        <div>
+          <span class="kicker">Competitive advantage</span>
+          <h3 style="margin-bottom:4px;">48-hour deployment</h3>
+          <p>Schools go live within 48 hours of signup — no lengthy IT projects — letting us capture demand faster than traditional enrollment systems.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · OPERATIONS PLAN -->
+    <section class="slide" data-title="Operations Plan">
+      <div class="slide-head">
+        <span class="eyebrow">Operations Plan</span>
+        <h2 class="slide-title">12-month execution roadmap</h2>
+      </div>
+      <div class="roadmap grow">
+        <article class="phase card">
+          <span class="phase-num">1</span>
+          <h3>MVP Development</h3>
+          <span class="months">Months 1–3</span>
+          <p>Build core registration, document uploads, registrar dashboard, and notifications.</p>
+        </article>
+        <article class="phase card">
+          <span class="phase-num">2</span>
+          <h3>Pilot Testing</h3>
+          <span class="months">Months 4–5</span>
+          <p>Run pilots with partner schools, gather feedback, and refine the user experience.</p>
+        </article>
+        <article class="phase card">
+          <span class="phase-num">3</span>
+          <h3>Commercial Launch</h3>
+          <span class="months">Months 6–8</span>
+          <p>Open sales and onboarding, publish pricing tiers, and support the enrollment season.</p>
+        </article>
+        <article class="phase card">
+          <span class="phase-num">4</span>
+          <h3>Support &amp; Expansion</h3>
+          <span class="months">Months 9–12</span>
+          <p>Scale to 15 partner schools, add integrations, and expand feature coverage.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 11 · FINANCIAL REQUIREMENT -->
+    <section class="slide" data-title="Financial Requirement">
+      <div class="slide-head">
+        <span class="eyebrow">Financial Requirement</span>
+        <h2 class="slide-title">Budget breakdown — <span class="accent">₱100,000</span> total</h2>
+      </div>
+      <div class="table-wrap grow">
+        <table class="budget">
+          <thead>
+            <tr>
+              <th>Line Item</th>
+              <th>Amount</th>
+              <th>Share</th>
+              <th>Allocation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">App Development</th>
+              <td class="amount">₱50,000</td>
+              <td class="pct">50%</td>
+              <td class="bar-cell"><span class="bar" style="--w:50%"></span></td>
+            </tr>
+            <tr>
+              <th scope="row">UI/UX Design</th>
+              <td class="amount">₱15,000</td>
+              <td class="pct">15%</td>
+              <td class="bar-cell"><span class="bar" style="--w:15%"></span></td>
+            </tr>
+            <tr>
+              <th scope="row">Marketing</th>
+              <td class="amount">₱15,000</td>
+              <td class="pct">15%</td>
+              <td class="bar-cell"><span class="bar" style="--w:15%"></span></td>
+            </tr>
+            <tr>
+              <th scope="row">QA Testing</th>
+              <td class="amount">₱10,000</td>
+              <td class="pct">10%</td>
+              <td class="bar-cell"><span class="bar" style="--w:10%"></span></td>
+            </tr>
+            <tr>
+              <th scope="row">Operations</th>
+              <td class="amount">₱10,000</td>
+              <td class="pct">10%</td>
+              <td class="bar-cell"><span class="bar" style="--w:10%"></span></td>
+            </tr>
+            <tr class="total">
+              <th scope="row">Total</th>
+              <td class="amount">₱100,000</td>
+              <td class="pct">100%</td>
+              <td class="bar-cell"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="budget-note"><svg><use href="#i-info"/></svg> The requested funding covers development through commercial launch, with the largest share allocated to building a stable, secure platform.</p>
+    </section>
+
+    <!-- 12 · THANK YOU -->
+    <section class="slide slide--closing" data-title="Thank You">
+      <span class="badge"><svg><use href="#i-trophy"/></svg> Philippine Startup Challenge XI</span>
+      <h2 class="closing-title">Thank You!</h2>
+      <p class="closing-quote">“Innovating today for a smarter, paperless tomorrow.”</p>
+      <a class="cta" href="mailto:contact@enrollease.ph?subject=Partner%20with%20EnrollEase%20for%20PSC%20XI">
+        <svg><use href="#i-spark"/></svg> Partner with EnrollEase for PSC XI
+      </a>
+      <a class="contact" href="mailto:contact@enrollease.ph">
+        <svg><use href="#i-mail"/></svg> contact@enrollease.ph
+      </a>
+      <div class="closing-foot">
+        <span><strong>Team Innovate</strong></span>
+        <span>·</span>
+        <span>Philippine Startup Challenge XI</span>
+        <span>·</span>
+        <span>EnrollEase</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Bottom bar ===== -->
+  <footer class="bottombar">
+    <button class="nav-btn" id="prevBtn" type="button" aria-label="Previous slide">
+      <svg><use href="#i-chev-left"/></svg><span>Previous</span>
+    </button>
+    <div class="dots" id="dots" role="tablist" aria-label="Slide navigation"></div>
+    <div class="keyhint"><kbd>←</kbd><kbd>→</kbd> to navigate</div>
+    <button class="nav-btn" id="nextBtn" type="button" aria-label="Next slide">
+      <span>Next</span><svg><use href="#i-chev-right"/></svg>
+    </button>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var slides   = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total    = slides.length;
+  var current  = 0;
+  var curEl    = document.getElementById("counterCurrent");
+  var totEl    = document.getElementById("counterTotal");
+  var fill     = document.getElementById("progressFill");
+  var prevBtn  = document.getElementById("prevBtn");
+  var nextBtn  = document.getElementById("nextBtn");
+  var dotsWrap = document.getElementById("dots");
+  var stage    = document.getElementById("stage");
+
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+  totEl.textContent = pad(total);
+
+  /* ---------- Build dot indicators ---------- */
+  var dots = slides.map(function (slide, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "dot";
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-label", "Go to slide " + (i + 1) + ": " + (slide.dataset.title || ""));
+    b.addEventListener("click", function () { goTo(i); });
+    dotsWrap.appendChild(b);
+    return b;
+  });
+
+  /* ---------- Core navigation ---------- */
+  function goTo(index, dir) {
+    if (index < 0 || index >= total || index === current) return;
+    if (typeof dir !== "number") dir = index > current ? 1 : -1;
+
+    var outgoing = slides[current];
+    var incoming = slides[index];
+
+    outgoing.classList.remove("active");
+    outgoing.classList.add(dir > 0 ? "exit-left" : "exit-right");
+    outgoing.setAttribute("aria-hidden", "true");
+    window.setTimeout(function () {
+      outgoing.classList.remove("exit-left", "exit-right");
+    }, 620);
+
+    incoming.classList.remove("exit-left", "exit-right", "active");
+    incoming.classList.toggle("from-left", dir < 0);
+    void incoming.offsetWidth; /* force reflow so the transition plays */
+    incoming.classList.add("active");
+    incoming.removeAttribute("aria-hidden");
+
+    /* reset scroll position of the incoming slide */
+    incoming.scrollTop = 0;
+
+    current = index;
+    render();
+  }
+
+  function next() { goTo(current + 1, 1); }
+  function prev() { goTo(current - 1, -1); }
+
+  function render() {
+    curEl.textContent = pad(current + 1);
+    fill.style.width = ((current + 1) / total * 100) + "%";
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    dots.forEach(function (d, i) {
+      var on = i === current;
+      d.classList.toggle("active", on);
+      d.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    slides.forEach(function (s, i) {
+      s.setAttribute("aria-hidden", i === current ? "false" : "true");
+    });
+  }
+
+  /* ---------- Controls ---------- */
+  nextBtn.addEventListener("click", next);
+  prevBtn.addEventListener("click", prev);
+
+  document.addEventListener("keydown", function (e) {
+    var k = e.key;
+    if (k === "ArrowRight" || k === "ArrowDown" || k === "PageDown" || k === " ") {
+      e.preventDefault(); next();
+    } else if (k === "ArrowLeft" || k === "ArrowUp" || k === "PageUp") {
+      e.preventDefault(); prev();
+    } else if (k === "Home") {
+      e.preventDefault(); goTo(0, -1);
+    } else if (k === "End") {
+      e.preventDefault(); goTo(total - 1, 1);
+    }
+  });
+
+  /* ---------- Touch / swipe support ---------- */
+  var touchX = 0, touchY = 0, swiping = false;
+  stage.addEventListener("touchstart", function (e) {
+    var t = e.changedTouches[0];
+    touchX = t.clientX; touchY = t.clientY; swiping = true;
+  }, { passive: true });
+  stage.addEventListener("touchend", function (e) {
+    if (!swiping) return;
+    swiping = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - touchX;
+    var dy = t.clientY - touchY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      dx < 0 ? next() : prev();
+    }
+  }, { passive: true });
+
+  /* ---------- Init ---------- */
+  slides[0].classList.add("active");
+  slides[0].removeAttribute("aria-hidden");
+  render();
+})();
+</script>
+</body>
+</html>
